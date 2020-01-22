@@ -1,6 +1,7 @@
 use crate::pmf::PMF;
 
-const M: i32 = 20;
+const KMAX: i32 = 15;
+const M: i32 = 10000;
 
 fn subs(v: &Vec<f64>, x: f64) -> f64 {
     let mut sum = 0.0;
@@ -24,7 +25,7 @@ fn print(name: String, v: &Vec<f64>) {
     println!("{}={}", name, dist);
 }
 
-fn deriv(v: &[f64]) -> Vec<f64> {
+fn integral(v: &[f64]) -> Vec<f64> {
     let mut ret: Vec<f64> = Vec::new();
     for (idx, coef) in v.iter().enumerate() {
         if idx > 0 {
@@ -45,30 +46,46 @@ fn binom(n: i32, k: i32) -> i32 {
 
 fn mul(v: &Vec<f64>, m: &f64) -> Vec<f64> {
     let mut ret: Vec<f64> = Vec::new();
-    for (idx, coef) in v.iter().enumerate() {
+    for coef in v.iter() {
         ret.push(*coef * m);
     }
     return ret;
 }
 
+fn factorial(i: i32) -> i32 {
+    if i <= 1 {
+        1
+    } else {
+        i * factorial(i - 1)
+    }
+}
+
 #[allow(non_snake_case)]
 pub fn run() {
     let Lx = PMF.to_vec();
-    let L1 = subs(&deriv(&Lx), 1.0);
-    let lx = mul(&deriv(&Lx), &(1.0 / L1));
-    print("L(x)".to_string(), &Lx);
-    print("l(x)".to_string(), &lx);
+    let L1 = subs(&integral(&Lx), 1.0);
+    let lx = mul(&integral(&Lx), &(1.0 / L1));
+    // print("L(x)".to_string(), &Lx);
+    // print("l(x)".to_string(), &lx);
     let tmax = 0.0;
-    // for i in (0..2) {
-    //     let g = (i as f64) * 0.0001;
-    //     let lmbd = g * L1;
-    //     let mut Rx = Vec::new();
-    //     for k in (0..M) {
-    //         let s = lmbd.powf(k as f64) * (-lmbd).exp() /
-
+    for i in (0..10000) {
+        let mut Rx = Vec::new();
+        let g = (i as f64) * 0.0001;
+        // println!("G:{}", g);
+        let R1 = g * L1;
+        // println!("R1:{}", R1);
+        for k in 0..KMAX {
+            Rx.push(R1.powf(k as f64) * (-1.0 * R1 as f64).exp() / (factorial(k) as f64));
+        }
+        let rx = mul(&integral(&Rx), &(1.0 / R1));
+        // print("R(x)".to_string(), &Rx);
+        // print("r(x)".to_string(), &rx);
+        let mut p = 1.0;
+        for _ in 0..1000 {
+            p = 1.0 - subs(&rx, 1.0 - subs(&lx, p));
+        }
+        let plr = subs(&Lx, p);
+        println!("{:.4},{:.8},{:.8e}", g, g * (1.0 - plr), plr);
+    }
     // }
-
-    println!("L(1)={}", subs(&Lx, 1.0));
-    println!("l(1)={}", subs(&lx, 1.0));
-    println!("L'(1)={}", L1);
 }
