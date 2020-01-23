@@ -1,0 +1,10 @@
+DECIMAL_PLACES = 6
+NUMBER_OF_COUNTS = 10000
+NUMBER_OF_CANDIDATES = 100
+SOURCE_FILE = "../src/pmf.rs"
+LIB_FILE = "../src/lib.rs"
+RELEASE_FILE = "../target/release/capture_fa"
+MUTATION_FACTOR = 0.8
+KMAX = 4
+OFFSET = 10
+DISPLAY = False
