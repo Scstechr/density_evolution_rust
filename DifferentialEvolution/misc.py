@@ -78,7 +78,7 @@ def write_to_log(filename, count, candidate, swap_num):
 def swap(c1, c2):
     c1['t'] = c2['t']
     c1['g'] = c2['g']
-    c1['d'] = c2['d']
+    c1['p'] = c2['p']
     c1['dist'] = [c for c in c2['dist']]
 
 

@@ -1,6 +1,6 @@
 import numpy as np
-import random
-import string
+# import random
+# import string
 
 from defaults import KMAX
 
@@ -16,8 +16,8 @@ def random_dist():
     return [l / lst_sum for l in lst]
 
 
-def random_name():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=15))
+# def random_name():
+#     return ''.join(random.choices(string.ascii_letters + string.digits, k=15))
 
 
 if __name__ == '__main__':

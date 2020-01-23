@@ -99,7 +99,7 @@ fn get_plr(i: i32, Lx: &Vec<f64>, L1: &f64, lx: &Vec<f64>) -> (f64, f64, f64) {
 #[allow(non_snake_case)]
 pub fn run() {
     let Lx = return_pmf();
-    print("L(x)".to_string(), &Lx);
+    // print("L(x)".to_string(), &Lx);
     let L1 = subs(&integral(&Lx), 1.0);
     let lx = mul(&integral(&Lx), &(1.0 / L1));
     let mut tmax = 0.0;

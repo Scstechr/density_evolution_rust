@@ -2,45 +2,30 @@ import subprocess as sp
 import numpy as np
 import sys
 from tqdm import tqdm
-from rands import random_dist, random_name
-from defaults import NUMBER_OF_CANDIDATES, SOURCE_FILE, RELEASE_FILE, MUTATION_FACTOR, OFFSET
+from rands import random_dist
+from defaults import NUMBER_OF_CANDIDATES, RELEASE_FILE, MUTATION_FACTOR
 from misc import swap, display
 
 
 def initialize():
     lst = []
     for i in tqdm(range(NUMBER_OF_CANDIDATES)):
-        lst.append({'i': str(i + 1), 't': 0.0, 'd': 0.0,
+        lst.append({'i': str(i + 1), 't': 0.0, 'p': 0.0,
                     'g': 150, 'dist': random_dist()})
     return lst
 
 
 def evaluate(candidate):
-    name = random_name()
-    lst = map(str, candidate['dist'])
-    pmf = ','.join(lst)
-    string = f"""
-pub const PMF: [f64; 21] = [{pmf}];
-"""
-    sp.call(f"echo '{string}' >| {SOURCE_FILE}", shell=True)
-    sp.call(f"cargo build --quiet --release", shell=True)
-    sp.call(f"mv {RELEASE_FILE} temp/{name}", shell=True)
-    # print(f"temp/{name} {candidate['g']}")
-    start = candidate['g'] - OFFSET
-    if start < 100:
-        start = 100
-    output = sp.getoutput(f"temp/{name} {start}")
-    # print(output)
+    lst = map(str, candidate['dist'][2:])
+    pmf = ' '.join(lst)
+    output = sp.getoutput(f"{RELEASE_FILE} {pmf}")
     try:
-        candidate['g'] = int(output.split("\n")[-1].split(',')[0])
-        candidate['d'] = float(output.split("\n")[-1].split(',')[1])
-        candidate['t'] = float(output.split("\n")[-1].split(',')[2])
-    except:
+        candidate['g'] = float(output.split(',')[0])
+        candidate['t'] = float(output.split(',')[1])
+        candidate['p'] = float(output.split(',')[2])
+    except ValueError:
         print(output)
         sys.exit(1)
-    # print(candidate)
-    sp.call(f"rm temp/{name}", shell=True)
-    return random_name
 
 
 def evaluation(candidates):
