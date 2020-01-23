@@ -1,9 +1,25 @@
-use crate::pmf::PMF;
-use std::process::exit;
+use crate::{ACCURACY, KMAX, MAX};
+use std::{env, process::exit};
 
-const KMAX: i32 = 15;
-const MAX: bool = true;
-const ACCURACY: f64 = 0.001;
+pub fn return_pmf() -> Vec<f64> {
+    let args: Vec<String> = env::args().collect();
+    let mut vargs: Vec<f64> = Vec::new();
+    vargs.push(0.000000);
+    vargs.push(0.000000);
+    for i in 1..args.len() {
+        let num: f64 = args[i].parse().unwrap();
+        vargs.push(num);
+    }
+    let len = vargs.len();
+    if len < 21 {
+        for _ in len..21 {
+            vargs.push(0.000000);
+        }
+    } else if len > 21 {
+        panic!("invalid argument");
+    }
+    return vargs;
+}
 
 fn subs(v: &Vec<f64>, x: f64) -> f64 {
     let mut sum = 0.0;
@@ -82,7 +98,8 @@ fn get_plr(i: i32, Lx: &Vec<f64>, L1: &f64, lx: &Vec<f64>) -> (f64, f64, f64) {
 
 #[allow(non_snake_case)]
 pub fn run() {
-    let Lx = PMF.to_vec();
+    let Lx = return_pmf();
+    print("L(x)".to_string(), &Lx);
     let L1 = subs(&integral(&Lx), 1.0);
     let lx = mul(&integral(&Lx), &(1.0 / L1));
     let mut tmax = 0.0;
