@@ -1,4 +1,4 @@
-use crate::{ACCURACY, KMAX, MAX};
+use crate::{ACCURACY, KMAX, MAX, START};
 use std::{env, process::exit};
 
 pub fn return_pmf() -> Vec<f64> {
@@ -103,7 +103,7 @@ pub fn run() {
     let L1 = subs(&integral(&Lx), 1.0);
     let lx = mul(&integral(&Lx), &(1.0 / L1));
     let mut tmax = 0.0;
-    for i in 1..(1.0 / ACCURACY) as i32 {
+    for i in (1.0 / ACCURACY * START) as i32..(1.0 / ACCURACY) as i32 {
         let (g, plr, t) = get_plr(i, &Lx, &L1, &lx);
         if !MAX {
             println!("{:.4},{:.8},{:.8e}", g, t, plr);

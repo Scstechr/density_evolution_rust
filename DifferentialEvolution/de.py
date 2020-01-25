@@ -11,7 +11,7 @@ def initialize():
     lst = []
     for i in tqdm(range(NUMBER_OF_CANDIDATES)):
         lst.append({'i': str(i + 1), 't': 0.0, 'p': 0.0,
-                    'g': 150, 'dist': random_dist()})
+                    'g': 0.0, 'dist': random_dist()})
     return lst
 
 
@@ -21,8 +21,8 @@ def evaluate(candidate):
     output = sp.getoutput(f"{RELEASE_FILE} {pmf}")
     try:
         candidate['g'] = float(output.split(',')[0])
-        candidate['t'] = float(output.split(',')[1])
         candidate['p'] = float(output.split(',')[2])
+        candidate['t'] = float(output.split(',')[1])
     except ValueError:
         print(output)
         sys.exit(1)
@@ -49,7 +49,7 @@ def mutate(idx, candidate, candidates):
         else:
             mutant.append(candidate['dist'][idxx])
     mutant = [m / sum(mutant) for m in mutant]
-    mutant = {'g': candidate['g'], 'd': 0.0, 't': 0.0, 'dist': mutant}
+    mutant = {'g': candidate['g'], 'p': 0.0, 't': 0.0, 'dist': mutant}
     evaluate(mutant)
     return mutant
 

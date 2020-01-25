@@ -1,8 +1,8 @@
 DECIMAL_PLACES = 6
-NUMBER_OF_COUNTS = 10000
-NUMBER_OF_CANDIDATES = 100
+NUMBER_OF_COUNTS = 1000000
+NUMBER_OF_CANDIDATES = 1000
 # SOURCE_FILE = "../src/pmf.rs"
-# LIB_FILE = "../src/lib.rs"
+LIB_FILE = "../src/lib.rs"
 RELEASE_FILE = "../target/release/density_evolution"
 MUTATION_FACTOR = 0.8
 KMAX = 4

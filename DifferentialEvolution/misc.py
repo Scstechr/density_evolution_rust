@@ -23,9 +23,9 @@ def get_info():
 def display(candidate, echo=True):
     disp = ['{:f}'.format(round(d, DECIMAL_PLACES))
             for d in candidate['dist'][2:KMAX + 1]]
-    t = '{:.7f}'.format(candidate['t'], 7)
-    d = '{:.2f}'.format(candidate['d'], 2)
-    g = '{:.2f}'.format(candidate['g'] / 100, 2)
+    t = '{:.4f}'.format(candidate['t'], 4)
+    d = '{:.4e}'.format(candidate['p'], 4)
+    g = '{:.4f}'.format(candidate['g'], 4)
     if 'i' in candidate.keys():
         i = candidate['i'].rjust(len(str(NUMBER_OF_CANDIDATES)), ' ')
         if echo:
@@ -42,7 +42,7 @@ def strip_line(space=True):
     num = NUMBER_OF_CANDIDATES
     numbers = '  '.join(
         [f" {bar}{str(s).rjust(2, ' ')}{bar} " for s in range(2, KMAX + 1)])
-    numbers += '  - G- DEG. --- T ---'
+    numbers += '  -  G - --  PLR -- - T -'
     if space:
         spaces = ' ' + ''.join([' ' for _ in range(len(f'[{num}/{num}]'))])
     else:
